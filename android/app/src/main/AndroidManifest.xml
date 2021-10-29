@@ -1,7 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.os.memo_noe">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
    <application
-        android:label="memo_noe"
+        android:label="Memo"
+       android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
