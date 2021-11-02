@@ -205,6 +205,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.10"
+  material_switch:
+    dependency: "direct main"
+    description:
+      name: material_switch
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.8"
   meta:
     dependency: transitive
     description:
