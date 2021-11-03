@@ -5,13 +5,13 @@ import 'package:memo_noe/api_data/api_liste_institution.dart';
 import 'package:memo_noe/modeles/institution_model.dart';
 import 'package:http/http.dart' as http;
 
-class ClientParGroupeDialogue extends StatefulWidget {
+class LiteInstitutionDialogue extends StatefulWidget {
 
   @override
-  _ClientParGroupeDialogueState createState() => _ClientParGroupeDialogueState();
+  _LiteInstitutionDialogueState createState() => _LiteInstitutionDialogueState();
 }
 
-class _ClientParGroupeDialogueState extends State<ClientParGroupeDialogue> {
+class _LiteInstitutionDialogueState extends State<LiteInstitutionDialogue> {
 
   late TextEditingController _searchQuery;
 

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:memo_noe/etudiant/liste_etudiants.dart';
 import 'package:memo_noe/institution/liste_institutions.dart';
+import 'package:memo_noe/travaux/liste_traveaux.dart';
 
 class Accueil extends StatefulWidget {
 
@@ -113,7 +114,8 @@ class _AccueilState extends State<Accueil> {
                           color: Colors.teal,
                           child: Padding(padding: const EdgeInsets.all(2.0),
                             child: InkWell(onTap: () {
-
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => ListeTraveaux()));
                             },
                               child: Container(
                                 width: 120.0,
@@ -121,7 +123,7 @@ class _AccueilState extends State<Accueil> {
                                   child: ListTile(
                                     title: Icon(Icons.book, color: Colors.white,),
                                     subtitle: Container(
-                                      child: Text('Traveaux',
+                                      child: Text('Travaux',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: (Platform.isAndroid || Platform.isIOS) ? 10 : 14,

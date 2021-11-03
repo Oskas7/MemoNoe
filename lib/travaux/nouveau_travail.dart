@@ -3,55 +3,43 @@ import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:material_switch/material_switch.dart';
 import 'package:memo_noe/Variables/variables_globales.dart';
-import 'package:memo_noe/popups/dialogue_institution.dart';
+import 'package:memo_noe/popups/dialogue_liste_etudiant.dart';
 import 'package:status_alert/status_alert.dart';
 import 'package:http/http.dart' as http;
 
-class NouveauEtudiant extends StatefulWidget {
+class NouveauTravail extends StatefulWidget {
   final String operation;
 
-  NouveauEtudiant({required this.operation});
+  NouveauTravail({required this.operation});
 
   @override
-  _NouveauEtudiantState createState() =>
-      _NouveauEtudiantState();
+  _NouveauTravailState createState() =>
+      _NouveauTravailState();
 }
 
-class _NouveauEtudiantState extends State<NouveauEtudiant> {
+class _NouveauTravailState extends State<NouveauTravail> {
 
-  TextEditingController _nom = TextEditingController();
-  TextEditingController _postnom = TextEditingController();
-  TextEditingController _prenom = TextEditingController();
-  TextEditingController _date_naissance = TextEditingController();
-  TextEditingController _lieu_naissance = TextEditingController();
-  TextEditingController _faculte = TextEditingController();
-  TextEditingController _departement = TextEditingController();
+  TextEditingController _etudiant = TextEditingController();
   TextEditingController _institution = TextEditingController();
-
-  DateTime selectedDate = DateTime.now();
+  TextEditingController _sujet = TextEditingController();
+  TextEditingController _directeur = TextEditingController();
+  TextEditingController _encadreur = TextEditingController();
 
   GlobalKey<ScaffoldState>_scaffoldKey = GlobalKey();
 
-  List<String> switchOptions = ["HOMME", "FEMME"];
-  String selectedSwitchOption = "HOMME";
-
-  String nom_utilisateur = "";
-
   String message_erreur = "Echec d'enregistrement", status = "";
 
-  String id_institution = "0", _sexe = "M";
+  List<String> switchOptions = ["TFC", "MEMOIRE"];
+  String selectedSwitchOption = "TFC";
+
+  String id_etudiant = "", id_institution = "";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
-
-    _date_naissance.text = formattedDate;
   }
 
   @override
@@ -71,7 +59,7 @@ class _NouveauEtudiantState extends State<NouveauEtudiant> {
             appBar: AppBar(
               backgroundColor: Colors.blue,
               centerTitle: true,
-              title: Text("NOUVEAU ETUDIANT",
+              title: Text("NOUVEAU TRAVAIL",
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -87,110 +75,61 @@ class _NouveauEtudiantState extends State<NouveauEtudiant> {
                   Padding(
                     padding: EdgeInsets.only(top: 5.0),
                     child: TextField(
-                      controller: _nom,
-                      style: TextStyle(color: Colors.white),
-                      onChanged: (value) {
-
-                      },
-                      decoration: InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.grey, width: 1.0),
-                          ),
-                          labelText: 'Nom',
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue),
-                              borderRadius: BorderRadius.circular(5.0))),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5.0),
-                    child: TextField(
-                      controller: _postnom,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.grey, width: 1.0),
-                          ),
-                          labelText: 'Post-Nom',
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue),
-                              borderRadius: BorderRadius.circular(5.0))),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5.0),
-                    child: TextField(
-                      controller: _prenom,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.grey, width: 1.0),
-                          ),
-                          labelText: 'Prénom',
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue),
-                              borderRadius: BorderRadius.circular(5.0))),
-                    ),
-                  ),
-                  MaterialSwitch(
-                    padding: const EdgeInsets.all(5.0),
-                    margin: const EdgeInsets.all(5.0),
-                    selectedOption: selectedSwitchOption,
-                    options: switchOptions,
-                    selectedBackgroundColor: Colors.blue,
-                    selectedTextColor: Colors.white,
-                    onSelect: (String selectedOption) {
-                      setState(() {
-                        selectedSwitchOption = selectedOption;
-                        if(selectedSwitchOption == "HOMME"){
-                          _sexe = "M";
-                        }
-                        if(selectedSwitchOption == "FEMME"){
-                          _sexe = "F";
-                        }
-                      });
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5.0),
-                    child: TextField(
-                      controller: _lieu_naissance,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.grey, width: 1.0),
-                          ),
-                          labelText: 'Lieu de naissance',
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue),
-                              borderRadius: BorderRadius.circular(5.0))),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
-                    child: TextField(
-                      controller: _date_naissance,
+                      controller: _etudiant,
                       style: TextStyle(color: Colors.white),
                       readOnly: true,
                       decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                          borderSide:
+                          const BorderSide(color: Colors.grey, width: 1.0),
                         ),
-                        labelText: 'Date de naissance',
+                        labelText: 'Etudiant',
                         labelStyle: TextStyle(color: Colors.white),
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
                             borderRadius: BorderRadius.circular(5.0)),
-                        suffixIcon: InkWell(child: Icon(Icons.date_range, color: Colors.white,), onTap: () => _selectDate(context),),
-                        prefixIcon: InkWell(child: Icon(Icons.date_range, color: Colors.white,), onTap: () => _selectDate(context),),
+                        suffixIcon: InkWell(
+                          child: Icon(
+                            Icons.people,
+                            color: Colors.white,
+                          ),
+                          onTap: () async {
+                            String _veh = await showDialog(
+                              context: this.context,
+                              builder: (context) =>
+                              new ListeEtudiantDialogue(),
+                            );
+
+                            var arr = _veh.split('<>');
+
+                            id_etudiant = arr[0];
+                            id_institution = arr[1];
+
+                            _etudiant.text = arr[2].toString();
+                            _institution.text = arr[1].toString();
+                          },
+                        ),
+                        prefixIcon: InkWell(
+                          child: Icon(
+                            Icons.people,
+                            color: Colors.white,
+                          ),
+                          onTap: () async {
+                            String _veh = await showDialog(
+                              context: this.context,
+                              builder: (context) =>
+                              new ListeEtudiantDialogue(),
+                            );
+
+                            var arr = _veh.split('<>');
+
+                            id_etudiant = arr[0];
+                            id_institution = arr[1];
+
+                            _etudiant.text = arr[2].toString();
+                            _institution.text = arr[1].toString();
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -210,58 +149,59 @@ class _NouveauEtudiantState extends State<NouveauEtudiant> {
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
                             borderRadius: BorderRadius.circular(5.0)),
-                        suffixIcon: InkWell(
-                          child: Icon(
-                            Icons.home,
-                            color: Colors.white,
-                          ),
-                          onTap: () async {
-                            String _veh = await showDialog(
-                              context: this.context,
-                              builder: (context) =>
-                              new LiteInstitutionDialogue(),
-                            );
-
-                            var arr = _veh.split('<>');
-
-                            id_institution = arr[0];
-
-                            _institution.text = arr[1].toString();
-                          },
-                        ),
-                        prefixIcon: InkWell(
-                          child: Icon(
-                            Icons.home,
-                            color: Colors.white,
-                          ),
-                          onTap: () async {
-                            String _veh = await showDialog(
-                              context: this.context,
-                              builder: (context) =>
-                              new LiteInstitutionDialogue(),
-                            );
-
-                            var arr = _veh.split('<>');
-
-                            id_institution = arr[0];
-
-                            _institution.text = arr[1].toString();
-                          },
-                        ),
                       ),
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 5.0),
                     child: TextField(
-                      controller: _faculte,
+                      controller: _sujet,
                       style: TextStyle(color: Colors.white),
+                      maxLines: null,
+                      minLines: 2,
+                      keyboardType: TextInputType.multiline,
+                      onChanged: (value) {
+
+                      },
                       decoration: InputDecoration(
                           enabledBorder: const OutlineInputBorder(
                             borderSide: const BorderSide(
                                 color: Colors.grey, width: 1.0),
                           ),
-                          labelText: 'Faculté',
+                          labelText: 'Sujet',
+                          labelStyle: TextStyle(color: Colors.white),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue),
+                              borderRadius: BorderRadius.circular(5.0))),
+                    ),
+                  ),
+                  MaterialSwitch(
+                    padding: const EdgeInsets.all(5.0),
+                    margin: const EdgeInsets.all(5.0),
+                    selectedOption: selectedSwitchOption,
+                    options: switchOptions,
+                    selectedBackgroundColor: Colors.blue,
+                    selectedTextColor: Colors.white,
+                    onSelect: (String selectedOption) {
+                      setState(() {
+                        selectedSwitchOption = selectedOption;
+                      });
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.0),
+                    child: TextField(
+                      controller: _directeur,
+                      style: TextStyle(color: Colors.white),
+                      onChanged: (value) {
+
+                      },
+                      decoration: InputDecoration(
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.grey, width: 1.0),
+                          ),
+                          labelText: 'Directeur',
                           labelStyle: TextStyle(color: Colors.white),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.blue),
@@ -271,14 +211,14 @@ class _NouveauEtudiantState extends State<NouveauEtudiant> {
                   Padding(
                     padding: EdgeInsets.only(top: 5.0),
                     child: TextField(
-                      controller: _departement,
+                      controller: _encadreur,
                       style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                           enabledBorder: const OutlineInputBorder(
                             borderSide: const BorderSide(
                                 color: Colors.grey, width: 1.0),
                           ),
-                          labelText: 'Département',
+                          labelText: 'Encadreur',
                           labelStyle: TextStyle(color: Colors.white),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.blue),
@@ -302,7 +242,7 @@ class _NouveauEtudiantState extends State<NouveauEtudiant> {
                       onPressed: () {
                         if(widget.operation == "ajouter"){
                           //Enregistrer
-                          if (_nom.text.isEmpty || _postnom.text.isEmpty || _prenom.text.isEmpty || _institution.text.isEmpty) {
+                          if (_sujet.text.isEmpty || _etudiant.text.isEmpty || _directeur.text.isEmpty) {
                             _scaffoldKey.currentState!.showSnackBar(SnackBar(
                                 content: Text("Veuillez renseigner les informations")));
                             return;
@@ -317,13 +257,13 @@ class _NouveauEtudiantState extends State<NouveauEtudiant> {
                                     Radius.circular(10)),
                                 headerAnimationLoop: false,
                                 animType: AnimType.SCALE,
-                                title: 'NOUVEAU ETUDIANT',
+                                title: 'TRAVAIL',
                                 desc: "Voulez-vous vraiment enregistrer ?",
                                 showCloseIcon: false,
                                 btnCancelText: "Non",
                                 btnOkText: "OUI",
                                 btnOkOnPress: () {
-                                  enregistrerInstitution();
+                                  //enregistrerCompte();
                                 },
                                 btnCancelOnPress: () {},
                               )
@@ -384,34 +324,12 @@ class _NouveauEtudiantState extends State<NouveauEtudiant> {
     );
   }
 
-  _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        // Refer step 1
-        firstDate: DateTime(1980),
-        lastDate: DateTime(2225),
-        helpText: "DATE DE NAISSANCE",
-        cancelText: "ANNULER",
-        confirmText: "CONFIRMER");
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-
-        String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
-
-        _date_naissance.text = formattedDate;
-      });
-  }
-
-  enregistrerInstitution() {
+  /*enregistrerCompte() {
     showLoaderDialog(context);
 
     String url = "http://" + VariablesGlobales.serveur + "/memo_noe/mes_requettes.php?operation="
-        "save_etudiant&nom="+_nom.text.toString()+"&postnom="+_postnom.text.toString()+"&prenom="+
-        _prenom.text.toString()+"&sexe="+_sexe+"&date_naissance="+_date_naissance.text.toString()
-        +"&lieu_naissance="+_lieu_naissance.text.toString()+"&faculte="+_faculte.text.toString()
-        +"&departement="+_departement.text.toString()+"&id_institution="+id_institution+"&photo=-";
+        "save_institution&designation=" + _designation.text.toString() + "&adresse="
+        + _adresse.text.toString() + "&devise=" + _devise.text.toString();
 
     url.replaceAll("", "%20");
 
@@ -443,7 +361,7 @@ class _NouveauEtudiantState extends State<NouveauEtudiant> {
         configuration: IconConfiguration(icon: Icons.error),
       );
     });
-  }
+  }*/
 
   setStatus(String message) {
     setState(() {
