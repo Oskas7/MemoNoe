@@ -96,7 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
               subtitle: "Nom d'utilisateur ou mot de passe incorrect",
               configuration: IconConfiguration(icon: Icons.error),
             );
-            //_scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(response.body.toString())));
           });
         }
       } else {
