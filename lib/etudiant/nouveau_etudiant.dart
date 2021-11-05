@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -63,7 +60,6 @@ class _NouveauEtudiantState extends State<NouveauEtudiant> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        (Platform.isAndroid || Platform.isIOS) ? Container() : Container(),
         Expanded(
           child: Scaffold(
             key: _scaffoldKey,

@@ -5,8 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:memo_noe/Variables/variables_globales.dart';
 import 'package:memo_noe/frames/Accueil.dart';
 import 'package:memo_noe/modeles/utilisateur_model.dart';
-
-import 'dart:io' show Platform;
+import 'package:universal_platform/universal_platform.dart';
 
 import 'package:status_alert/status_alert.dart';
 
@@ -53,61 +52,59 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   connexionAuServeur(nomutilisateur, codeutilisateur) async {
-    if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS || Platform.isWindows) {
-      showLoaderDialog(context);
-      String _url = "http://" +
-          VariablesGlobales.serveur +
-          "/memo_noe/getData.php?operation=getLogin&nom_utilisateur=" +
-          nomutilisateur +
-          "&mot_de_passe=" +
-          codeutilisateur;
-      final response = await http.get(Uri.parse(_url));
+    showLoaderDialog(context);
+    String _url = "http://" +
+        VariablesGlobales.serveur +
+        "/memo_noe/getData.php?operation=getLogin&nom_utilisateur=" +
+        nomutilisateur +
+        "&mot_de_passe=" +
+        codeutilisateur;
+    final response = await http.get(Uri.parse(_url));
 
-      setState(() {
-        isLoading = false;
-      });
+    setState(() {
+      isLoading = false;
+    });
 
-      if (response.statusCode == 200) {
-        debugPrint("ReponseOS:"+response.body);
+    if (response.statusCode == 200) {
+      debugPrint("ReponseOS:"+response.body);
 
-        //Fermer la progression
-        Navigator.pop(context);
+      //Fermer la progression
+      Navigator.pop(context);
 
-        if(response.body.toString().contains("{")){
-          final parsed = json
-              .decode(response.body)["Donnee"]
-              .cast<Map<String, dynamic>>();
+      if(response.body.toString().contains("{")){
+        final parsed = json
+            .decode(response.body)["Donnee"]
+            .cast<Map<String, dynamic>>();
 
-          List<UtilisateurModel> recordUser = parsed.map<UtilisateurModel>((json) => new UtilisateurModel.fromJson(json)).toList();
+        List<UtilisateurModel> recordUser = parsed.map<UtilisateurModel>((json) => new UtilisateurModel.fromJson(json)).toList();
 
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) {
-              return Accueil();
-            }),
-                (route) => false,
-          );
-        }else{
-          setState(() {
-            StatusAlert.show(
-              context,
-              duration: Duration(seconds: 4),
-              title: 'Message',
-              subtitle: "Nom d'utilisateur ou mot de passe incorrect",
-              configuration: IconConfiguration(icon: Icons.error),
-            );
-          });
-        }
-      } else {
-        Navigator.pop(context);
-        StatusAlert.show(
+        Navigator.pushAndRemoveUntil(
           context,
-          duration: Duration(seconds: 4),
-          title: 'Message',
-          subtitle: "Echec de connexion",
-          configuration: IconConfiguration(icon: Icons.error),
+          MaterialPageRoute(builder: (context) {
+            return Accueil();
+          }),
+              (route) => false,
         );
+      }else{
+        setState(() {
+          StatusAlert.show(
+            context,
+            duration: Duration(seconds: 4),
+            title: 'Message',
+            subtitle: "Nom d'utilisateur ou mot de passe incorrect",
+            configuration: IconConfiguration(icon: Icons.error),
+          );
+        });
       }
+    } else {
+      Navigator.pop(context);
+      StatusAlert.show(
+        context,
+        duration: Duration(seconds: 4),
+        title: 'Message',
+        subtitle: "Echec de connexion",
+        configuration: IconConfiguration(icon: Icons.error),
+      );
     }
   }
 
@@ -120,7 +117,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Column(
       children: [
-        (Platform.isAndroid || Platform.isIOS) ? Container() : Container(),
         Expanded(
           child: Scaffold(
             key: _scaffoldKey,
@@ -162,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     key: _formKey,
                     child: Padding(
                       padding:
-                          const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
                       child: Column(
                         children: <Widget>[
                           SizedBox(
@@ -177,11 +173,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(40)),
+                                      BorderRadius.all(Radius.circular(40)),
                                       borderSide: BorderSide(color: Colors.blue)),
                                   enabledBorder: OutlineInputBorder(
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(40)),
+                                      BorderRadius.all(Radius.circular(40)),
                                       borderSide: BorderSide(color: Colors.blue)),
                                   contentPadding: EdgeInsets.symmetric(
                                       horizontal: 32, vertical: 10),
@@ -208,11 +204,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(40)),
+                                      BorderRadius.all(Radius.circular(40)),
                                       borderSide: BorderSide(color: Colors.blue)),
                                   enabledBorder: OutlineInputBorder(
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(40)),
+                                      BorderRadius.all(Radius.circular(40)),
                                       borderSide: BorderSide(color: Colors.blue)),
                                   contentPadding: EdgeInsets.symmetric(
                                       horizontal: 32, vertical: 10),
@@ -236,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
+                                  borderRadius: BorderRadius.circular(25),
                                   side: BorderSide(color: Colors.white, width: 2)
                               ),
                               color: Colors.blue,

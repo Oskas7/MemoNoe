@@ -1,11 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:memo_noe/api_data/api_liste_institution.dart';
 import 'package:memo_noe/api_data/api_liste_traveaux.dart';
-import 'package:memo_noe/institution/nouvelle_institution.dart';
-import 'package:memo_noe/modeles/institution_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:memo_noe/modeles/travail_model.dart';
 import 'package:memo_noe/travaux/nouveau_travail.dart';
@@ -117,8 +113,7 @@ class _ListeTraveauxState extends State<ListeTraveaux>
 
   //Create a app bar title widget
   Widget _buildTitle(BuildContext context) {
-    var horizontalTitleAlignment =
-        Platform.isIOS ? CrossAxisAlignment.center : CrossAxisAlignment.start;
+    var horizontalTitleAlignment = CrossAxisAlignment.start;
 
     return new InkWell(
       onTap: () => (){},
@@ -217,7 +212,6 @@ class _ListeTraveauxState extends State<ListeTraveaux>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        (Platform.isAndroid || Platform.isIOS) ? Container() : Container(),
         Expanded(
           child: Scaffold(
             key: scaffoldKey,

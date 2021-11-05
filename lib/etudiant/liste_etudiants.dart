@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:memo_noe/api_data/api_liste_etudiant.dart';
@@ -114,8 +113,7 @@ class _ListeEtudiantsState extends State<ListeEtudiants>
 
   //Create a app bar title widget
   Widget _buildTitle(BuildContext context) {
-    var horizontalTitleAlignment =
-        Platform.isIOS ? CrossAxisAlignment.center : CrossAxisAlignment.start;
+    var horizontalTitleAlignment = CrossAxisAlignment.start;
 
     return new InkWell(
       onTap: () => (){},
@@ -215,7 +213,6 @@ class _ListeEtudiantsState extends State<ListeEtudiants>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        (Platform.isAndroid || Platform.isIOS) ? Container() : Container(),
         Expanded(
           child: Scaffold(
             key: scaffoldKey,
@@ -226,8 +223,8 @@ class _ListeEtudiantsState extends State<ListeEtudiants>
               iconTheme: IconThemeData(color: Colors.white),
               leading: _isSearching
                   ? new BackButton(
-                      color: Colors.white,
-                    )
+                color: Colors.white,
+              )
                   : null,
               title: _isSearching ? _buildSearchField() : _buildTitle(context),
               actions: _buildActions(),
@@ -322,18 +319,18 @@ class _ListeEtudiantsState extends State<ListeEtudiants>
                   }),
             )
                 : allRecord == null
-                    ? new Center(
-                        child: Container(
-                          width: 120,
-                          height: 120,
-                          child: CircularProgressIndicator(
-                            backgroundColor: Colors.blue,
-                          ),
-                        ),
-                      )
-                    : new Center(
-                        child: new Text("Aucune donnée trouvée"),
-                      ),
+                ? new Center(
+              child: Container(
+                width: 120,
+                height: 120,
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.blue,
+                ),
+              ),
+            )
+                : new Center(
+              child: new Text("Aucune donnée trouvée"),
+            ),
           ),
         ),
       ],

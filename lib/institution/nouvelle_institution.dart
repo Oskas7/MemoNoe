@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:memo_noe/Variables/variables_globales.dart';
@@ -44,7 +41,6 @@ class _NouvelleInstitutionState extends State<NouvelleInstitution> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        (Platform.isAndroid || Platform.isIOS) ? Container() : Container(),
         Expanded(
           child: Scaffold(
             key: _scaffoldKey,

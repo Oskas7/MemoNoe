@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:memo_noe/etudiant/liste_etudiants.dart';
 import 'package:memo_noe/institution/liste_institutions.dart';
 import 'package:memo_noe/travaux/liste_traveaux.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class Accueil extends StatefulWidget {
 
@@ -56,7 +55,7 @@ class _AccueilState extends State<Accueil> {
                   child: Align(
                     alignment: Alignment.center,
                     child: GridView.count(
-                      crossAxisCount: (Platform.isAndroid || Platform.isIOS) ? 3 : 7,
+                      crossAxisCount: (UniversalPlatform.isAndroid) ? 3 : 7,
                       crossAxisSpacing: 5,
                       mainAxisSpacing: 10,
                       children: [
@@ -76,7 +75,7 @@ class _AccueilState extends State<Accueil> {
                                       child: Text("Institution",
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: (Platform.isAndroid || Platform.isIOS) ? 10 : 14,
+                                            fontSize: (UniversalPlatform.isAndroid) ? 10 : 14,
                                             color: Colors.white, ),
                                           textAlign: TextAlign.center),
                                     ),
@@ -101,7 +100,7 @@ class _AccueilState extends State<Accueil> {
                                       child: Text('Etudiant',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: (Platform.isAndroid || Platform.isIOS) ? 10 : 14,
+                                            fontSize: (UniversalPlatform.isAndroid) ? 10 : 14,
                                             color: Colors.white, ),
                                           textAlign: TextAlign.center),
                                     ),
@@ -126,7 +125,7 @@ class _AccueilState extends State<Accueil> {
                                       child: Text('Travaux',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: (Platform.isAndroid || Platform.isIOS) ? 10 : 14,
+                                            fontSize: (UniversalPlatform.isAndroid) ? 10 : 14,
                                             color: Colors.white, ),
                                           textAlign: TextAlign.center),
                                     ),
@@ -150,7 +149,7 @@ class _AccueilState extends State<Accueil> {
                                       child: Text('Paramètres',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: (Platform.isAndroid || Platform.isIOS) ? 10 : 14,
+                                            fontSize: (UniversalPlatform.isAndroid) ? 10 : 14,
                                             color: Colors.white, ),
                                           textAlign: TextAlign.center),
                                     ),
@@ -174,7 +173,7 @@ class _AccueilState extends State<Accueil> {
                                       child: Text('Aide',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: (Platform.isAndroid || Platform.isIOS) ? 10 : 14,
+                                            fontSize: (UniversalPlatform.isAndroid) ? 10 : 14,
                                             color: Colors.white, ),
                                           textAlign: TextAlign.center),
                                     ),
@@ -198,7 +197,7 @@ class _AccueilState extends State<Accueil> {
                                       child: Text('Quitter',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
-                                            fontSize: (Platform.isAndroid || Platform.isIOS) ? 10 : 14,
+                                            fontSize: (UniversalPlatform.isAndroid) ? 10 : 14,
                                             color: Colors.white, ),
                                           textAlign: TextAlign.center),
                                     ),

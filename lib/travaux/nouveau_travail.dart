@@ -1,12 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:material_switch/material_switch.dart';
-import 'package:memo_noe/Variables/variables_globales.dart';
 import 'package:memo_noe/popups/dialogue_liste_etudiant.dart';
-import 'package:status_alert/status_alert.dart';
 import 'package:http/http.dart' as http;
 
 class NouveauTravail extends StatefulWidget {
@@ -51,7 +48,6 @@ class _NouveauTravailState extends State<NouveauTravail> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        (Platform.isAndroid || Platform.isIOS) ? Container() : Container(),
         Expanded(
           child: Scaffold(
             key: _scaffoldKey,
