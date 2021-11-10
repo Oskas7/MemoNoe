@@ -16,7 +16,7 @@ class _ListeEtudiantDialogueState extends State<ListeEtudiantDialogue> {
   late TextEditingController _searchQuery;
 
   late List<EtudiantModel> filteredRecored = [];
-  late List<EtudiantModel> allRecord;
+  late List<EtudiantModel> allRecord = [];
 
   @override
   void initState() {

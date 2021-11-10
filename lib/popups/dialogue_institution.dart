@@ -16,7 +16,7 @@ class _LiteInstitutionDialogueState extends State<LiteInstitutionDialogue> {
   late TextEditingController _searchQuery;
 
   late List<InstitutionModel> filteredRecored = [];
-  late List<InstitutionModel> allRecord;
+  late List<InstitutionModel> allRecord = [];
 
   @override
   void initState() {

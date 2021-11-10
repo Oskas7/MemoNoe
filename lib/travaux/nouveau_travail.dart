@@ -1,10 +1,17 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:material_switch/material_switch.dart';
+import 'package:memo_noe/Variables/variables_globales.dart';
 import 'package:memo_noe/popups/dialogue_liste_etudiant.dart';
 import 'package:http/http.dart' as http;
+import 'package:status_alert/status_alert.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class NouveauTravail extends StatefulWidget {
   final String operation;
@@ -23,15 +30,27 @@ class _NouveauTravailState extends State<NouveauTravail> {
   TextEditingController _sujet = TextEditingController();
   TextEditingController _directeur = TextEditingController();
   TextEditingController _encadreur = TextEditingController();
+  TextEditingController _piece_jointe = TextEditingController();
 
   GlobalKey<ScaffoldState>_scaffoldKey = GlobalKey();
 
   String message_erreur = "Echec d'enregistrement", status = "";
+  String chemin_acces = "";
+
+  String base64Image = "";
 
   List<String> switchOptions = ["TFC", "MEMOIRE"];
   String selectedSwitchOption = "TFC";
 
   String id_etudiant = "", id_institution = "";
+
+  String _fileName = "";
+  String _path = "";
+  late Map<String, String> _paths;
+  bool _hasValidMime = false;
+  late FileType _pickingType;
+
+  late Uint8List profilePicBytes;
 
   @override
   void initState() {
@@ -221,6 +240,39 @@ class _NouveauTravailState extends State<NouveauTravail> {
                               borderRadius: BorderRadius.circular(5.0))),
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: TextField(
+                      controller: _piece_jointe,
+                      style: TextStyle(color: Colors.white),
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide:
+                          const BorderSide(color: Colors.grey, width: 1.0),
+                        ),
+                        labelText: 'Pièce jointe',
+                        labelStyle: TextStyle(color: Colors.white),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(5.0)),
+                        suffixIcon: InkWell(
+                            child: Icon(
+                              Icons.attachment,
+                              color: Colors.white,
+                            ),
+                            onTap: () {
+                              if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS) {
+                                _pickingType = FileType.image;
+
+                                _openFileExplorer();
+                              }else{
+
+                              }
+                            }),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 20,),
                   SizedBox(
                     height: 50,
@@ -259,7 +311,7 @@ class _NouveauTravailState extends State<NouveauTravail> {
                                 btnCancelText: "Non",
                                 btnOkText: "OUI",
                                 btnOkOnPress: () {
-                                  //enregistrerCompte();
+                                  saveTravail();
                                 },
                                 btnCancelOnPress: () {},
                               )
@@ -362,6 +414,100 @@ class _NouveauTravailState extends State<NouveauTravail> {
   setStatus(String message) {
     setState(() {
       status = message;
+    });
+  }
+
+  void _openFileExplorer() async {
+    if (_pickingType != FileType.custom || _hasValidMime) {
+      try {
+        FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+
+        if(result != null) {
+
+          PlatformFile file = result.files.first;
+
+          _path = file.path.toString();
+
+          print(file.name);
+          print(file.bytes);
+          print(file.size);
+          print(file.extension);
+          print(file.path);
+
+          profilePicBytes = await File(file.path.toString()).readAsBytes();
+          base64Image = Base64Encoder().convert(profilePicBytes.toList());
+
+          chemin_acces = _path;
+        } else {
+          // User canceled the picker
+        }
+        /*_path = await FilePicker.getFilePath(type: _pickingType);
+
+        profilePicBytes = await File(_path).readAsBytes();
+        base64Image = Base64Encoder().convert(profilePicBytes.toList());
+
+        chemin_acces = _path;
+
+        _piece_jointe.text = chemin_acces;*/
+        _piece_jointe.text = chemin_acces;
+      } on PlatformException catch (e) {
+        print("Unsupported operation" + e.toString());
+      }
+      if (!mounted) return;
+      setState(() {
+        _fileName = _path != null
+            ? _path.split('/').last
+            : _paths != null
+            ? _paths.keys.toString()
+            : '...';
+      });
+    }
+  }
+
+  saveTravail() {
+    showLoaderDialog(context);
+
+    String url = "http://" + VariablesGlobales.serveur + "/memo_noe/mes_requettes.php?operation=save_travail_etudiant";
+
+    url.replaceAll("", "%20");
+
+    debugPrint(url);
+
+    http.post(Uri.parse(url), body: {
+      "id_etudiant": id_etudiant,
+      "id_institution": id_institution,
+      "sujet": _sujet.text.toString(),
+      "categorie": selectedSwitchOption,
+      "directeur": _directeur.text,
+      "encadreur": _encadreur.text,
+      "url_photo": base64Image,
+    }).then((result) async {
+      Navigator.pop(context, "succes");
+      setStatus(result.statusCode == 200 ? result.body : message_erreur);
+
+      if (status != message_erreur) {
+        StatusAlert.show(
+          context,
+          duration: Duration(seconds: 4),
+          title: 'Message',
+          subtitle: result.body.toString(),
+          configuration: IconConfiguration(icon: Icons.done),
+        );
+
+        Navigator.pop(context, "succes");
+      }
+    }).catchError((error) {
+      print("Erreur:"+error.toString());
+
+      Navigator.pop(context);
+      setStatus(error);
+      StatusAlert.show(
+        context,
+        duration: Duration(seconds: 4),
+        title: 'Message',
+        subtitle: status,
+        configuration: IconConfiguration(icon: Icons.error),
+      );
     });
   }
 

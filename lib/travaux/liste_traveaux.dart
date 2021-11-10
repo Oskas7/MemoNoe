@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:memo_noe/Variables/variables_globales.dart';
 import 'package:memo_noe/api_data/api_liste_traveaux.dart';
 import 'package:http/http.dart' as http;
 import 'package:memo_noe/modeles/travail_model.dart';
 import 'package:memo_noe/travaux/nouveau_travail.dart';
+
+import 'package:url_launcher/url_launcher.dart' as ul;
 
 class ListeTraveaux extends StatefulWidget {
 
@@ -49,7 +52,7 @@ class _ListeTraveauxState extends State<ListeTraveaux>
     setState(() {});
   }
 
-  late List<TravailModel> allRecord;
+  late List<TravailModel> allRecord = [];
 
   showLoaderDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
@@ -268,7 +271,8 @@ class _ListeTraveauxState extends State<ListeTraveaux>
                               return AlertDialog(
                                 title: Text(filteredRecored[index].id_etudiant),
                                 content: setupAlertDialoadContainer(
-                                    filteredRecored[index].id_institution.toString()),
+                                    filteredRecored[index].id_institution.toString(),
+                                    filteredRecored[index].id_etudiant.toString()),
                               );
                             });
                       },
@@ -354,13 +358,13 @@ class _ListeTraveauxState extends State<ListeTraveaux>
     );
   }
 
-  Widget setupAlertDialoadContainer(String id_institution) {
+  Widget setupAlertDialoadContainer(String id_institution, String id_etudiant) {
     return Container(
-      height: 200.0, // Change as per your requirement
+      height: 220.0, // Change as per your requirement
       width: 300.0, // Change as per your requirement
       child: ListView.builder(
         shrinkWrap: true,
-        itemCount: 3,
+        itemCount: 4,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
               title: InkWell(
@@ -368,7 +372,9 @@ class _ListeTraveauxState extends State<ListeTraveaux>
                   debugPrint(index.toString());
                   Navigator.pop(context);
                   if (index == 0) {
-
+                    ul.launch(
+                      "http://"+VariablesGlobales.serveur+"/memo_noe/"+id_etudiant.toString()+".PNG",
+                    );
                   }
 
                   if (index == 1) {
@@ -376,15 +382,21 @@ class _ListeTraveauxState extends State<ListeTraveaux>
                   }
 
                   if (index == 2) {
+
+                  }
+
+                  if (index == 3) {
                     Navigator.pop(context);
                   }
                 },
                 child: Text(
                   index == 0
-                      ? "Modifier"
+                      ? "Télécharger PDF"
                       : index == 1
-                      ? "Supprimer"
+                      ? "Modifier"
                       : index == 2
+                      ? "Supprimer"
+                      : index == 3
                       ? "Annuler"
                       : "",
                 ),

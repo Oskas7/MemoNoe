@@ -49,7 +49,7 @@ class _ListeEtudiantsState extends State<ListeEtudiants>
     setState(() {});
   }
 
-  late List<EtudiantModel> allRecord;
+  late List<EtudiantModel> allRecord = [];
 
   showLoaderDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
